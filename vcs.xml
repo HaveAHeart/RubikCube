@@ -6,6 +6,10 @@
           <option name="url" value="https://github.com/HaveAHeart/KotlinAsFirst2018/" />
           <option name="userName" value="" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/HaveAHeart/RubikCube" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
     <option name="cloneParentDir" value="C:\Users\Alexey\IdeaProjects" />
