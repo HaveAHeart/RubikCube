@@ -1,4 +1,9 @@
 package main;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+
 /*
 Cube -> 6 sides. Every side consists of 3 rows OR 3 columns.
 Layers spin realisation can be created using rows ans columns.
@@ -74,46 +79,113 @@ solving 3x3 Cube
 
  */
 public class Rubik {
-    public class Cube {
-        public class Side {
-                public class Row {
-                    char[] values;
-                    public Row(char[] arr) {
-                        values = arr;
-                    }
-                    public Col rotateCW() {
-                        return new Col(values);
-                    }
-                    public Col rotateCCW() {
-                        //need to reverse array
-                        for(int i=0; i<values.length/2; i++) {
-                            char temp = values[i];
-                            values[i] = values[values.length-1-i];
-                            values[values.length-1-i] = temp;
-                        }
-                        return new Col(values);
-                    }
+    int dim;
+    public Rubik (int dimensions) {
+        dim = dimensions;
+    }
+    public class Row {
+        String values;
+        //generator
+        public Row(String str) { values = str; } //TODO: str length check
+        //------------------
+        //rotation methods
+        public Col rotateCW() { return new Col(values); }
+        public Col rotateCCW() {
+            values = new StringBuilder(values).reverse().toString();
+            return new Col(values);
+        }
+        //------------------
+        //access methods
+        public char getChar(int num) { return values.charAt(num); } //TODO: num check
+    }
 
-                }
-                //---------------------------------------
-                public class Col {
-                    char[] values;
-                    public Col(char[] arr) {
-                        values = arr;
-                    }
-                    public Row rotateCW() {
-                        return new Row(values);
-                    }
-                    public Row rotateCCW() {
-                        //need to reverse array
-                        for(int i=0; i<values.length/2; i++) {
-                            char temp = values[i];
-                            values[i] = values[values.length-1-i];
-                            values[values.length-1-i] = temp;
-                        }
-                        return new Row(values);
-                    }
-                }
+    public class Col {
+        String values;
+        //generator
+        public Col(String str) {
+            values = str;
+        } //TODO: str length check
+        //------------------
+        //rotation methods
+        public Row rotateCW() {
+            return new Row(values);
+        }
+        public Row rotateCCW() {
+            values = new StringBuilder(values).reverse().toString();
+            return new Row(values);
+        }
+        //------------------
+        //access methods
+        public char getChar(int num) { return values.charAt(num); } //TODO: num check
+    }
+
+    public class Side {
+        String values = "";
+        StringBuilder sb = new StringBuilder();
+        //generators
+        public Side (Col[] cols) { //TODO: check amount and size of columns
+            for (int i = 0; i < dim; i++) {
+                for (int b = 0; b < dim; b++) { sb.append(cols[b].getChar(i)); }
             }
+            values = sb.toString();
+        }
+        public Side (Row[] rows) { //TODO: check amount and size of rows
+            for (int i = 0; i < dim; i++) {
+                for (int b = 0; b < dim; b++) { sb.append(rows[i].getChar(b)); }
+            }
+            values = sb.toString();
+        }
+        public Side (String str) {
+            values = str;
+        }
+        //------------------
+        //side parts access methods
+        public Row getRow (int rowNum) { //TODO: check rowNum
+            StringBuilder sb = new StringBuilder();
+            for (int i = rowNum * (dim - 1) - 1; i < rowNum * dim - 1; i++) {
+                sb.append(values.charAt(i));
+            }
+            return new Row(sb.toString());
+        }
+        public Col getCol (int colNum) { //TODO: check colnum
+            StringBuilder sb = new StringBuilder();
+            for (int i = colNum - 1; i < dim * dim; i += dim) {
+                sb.append(values.charAt(i));
+            }
+            return new Col(sb.toString());
+        }
+        //------------------
+        //rotation methods
+        public Side rotateCW () {
+            Col[] cols = new Col[dim];
+            for (int i = dim - 1; i >= 0; i--) {/*TODO: fix this crap, access modifying obj*/
+                cols[i] = new Side(values).getRow(dim - i).rotateCW(); //terrible
+            }
+            return new Side(cols);
+        }
+        public Side rotateCCW () {
+            Col[] cols = new Col[dim];
+            for (int i = 0; i < dim; i++) {/*TODO: fix this crap, access modifying obj*/
+                cols[i] = new Side(values).getRow(i).rotateCCW(); //terrible
+            }
+            return new Side(cols);
+        }
+        //------------------
+        //side state access methods
+        public void sideState () { //TODO: maybe, some array-returning realisation?
+            for (int i = 0; i < dim; i++) {
+                StringBuilder sb = new StringBuilder();
+                for (int b = 0; b < dim; b++) {
+                    sb.append(values.charAt(i * dim + b));
+                    sb.append(" ");
+                }
+                sb.append("\r\n");
+            }
+            System.out.println(sb.toString());
+
         }
     }
+    public class Cube {
+
+    }
+}
