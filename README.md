@@ -13,20 +13,11 @@ rotating CW-> top row becomes right column, middle - to middle, so on
 also if every side in, for example, 3x3 cube will have numbers from 0 to 8    0 1 2
                                                                             ( 3 4 5 ),
                                                                               6 7 8
-we can transform 3d cube into his 2d version:
+we can transform 3d cube into his 2d version, so, his top side will be above the front one, back - left - front - top will be in a row,
+and the bottom side will be under front one.
 
                  
-                | 0 1 2 |
--> top part at  | 3 4 5 |     
-the top of      | 3 4 5 |
-front part
-| 0 1 2 | 0 1 2 | 0 1 2 | 0 1 2 |
-| 3 4 5 | 3 4 5 | 3 4 5 | 3 4 5 |  - also that shows how the side values are indexed
-| 6 7 8 | 6 7 8 | 6 7 8 | 6 7 8 |
-
-                | 0 1 2 |
-                | 3 4 5 |
-                | 6 7 8 |
+ 
                 
 
 connected sides rotation can also be realised with replacing rows
