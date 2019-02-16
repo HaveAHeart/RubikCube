@@ -19,15 +19,15 @@ we can transform 3d cube into his 2d version:
                 | 0 1 2 |
                 | 3 4 5 |     
                 | 3 4 5 |
-  ______ _______ _______ ________ .
+. ______._______._______.________.
 | 0 1 2 | 0 1 2 | 0 1 2 | 0 1 2 |
 | 3 4 5 | 3 4 5 | 3 4 5 | 3 4 5 |  - also that shows how the side values are indexed
 | 6 7 8 | 6 7 8 | 6 7 8 | 6 7 8 |
-  ------ ------- ------- -------- .
+.-------.-------.-------.--------.
                 | 0 1 2 |
                 | 3 4 5 |
                 | 6 7 8 |
-                 -------
+                .-------.
 
 connected sides rotation can also be realised with replacing rows
 
