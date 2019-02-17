@@ -156,12 +156,6 @@ public class Rubik {
 
     public class Cube {
         Side[] values = new Side[6]; //sides arr format: top - front - right - back - left - bot sides
-        String[] topBotRowRot = {"right", "bottom", "left", "top"}; //CW rotation - order for rotating rows/cols
-        String[] topBotColRot = {"front", "bottom", "back", "top"}; //for CCW rotation need to reverse the order
-        String[] rightLeftRowRot = {"back", "left", "front", "right"};
-        String[] rightLeftColRot = {"bottom", "left", "top", "right"};
-        String[] frontBackRowRot = {"right", "back", "left", "front"};
-        String[] frontBackColRot = {"bottom", "back", "top", "front"};
 
         //generators
         public Cube(Side[] sides) {
@@ -266,7 +260,106 @@ public class Rubik {
             }
         }
         public void rotateCol(String side, String direction, int startNum, int endNum) {
-
+            if (side.toLowerCase().equals("left") || side.toLowerCase().equals("right")) {
+                if (direction.toLowerCase().equals("cw")) {
+                    for (int colNum = startNum; colNum <= endNum; colNum++) {
+                        if (colNum == 0) { //rotating whole affected front/back side
+                            if (side.toLowerCase().equals("left")) { values[3] = values[3].rotateCCW(); }
+                            else { values[1] = values[1].rotateCW(); }
+                        } else {
+                            if (colNum == dim - 1) {
+                                if (side.toLowerCase().equals("left")) { values[1] = values[1].rotateCW(); }
+                                else { values[3] = values[3].rotateCCW(); }
+                            }
+                        }
+                        Col replacingCol = values[5].getRow(dim - colNum).rotateCW();
+                        Col tempCol = values[4].getCol(colNum); //rotating - taking row at the top side
+                        values[4] = values[4].changeCol(colNum, replacingCol);
+                        replacingCol = tempCol;
+                        tempCol = values[0].getRow(colNum).rotateCW();
+                        values[0] = values[0].changeRow(colNum, replacingCol.rotateCW());
+                        replacingCol = tempCol;
+                        tempCol = values[2].getCol(dim - colNum);
+                        values[2] = values[2].changeCol(dim - colNum, replacingCol);
+                        replacingCol = tempCol;
+                        values[5] = values[5].changeRow(dim - colNum, replacingCol.rotateCW());
+                    }
+                } else {
+                    for (int colNum = startNum; colNum <= endNum; colNum++) {
+                        //rotating whole affected front/back side
+                        if (colNum == 0) {
+                            if (side.toLowerCase().equals("left")) { values[3] = values[3].rotateCW(); }
+                            else { values[1] = values[1].rotateCCW(); }
+                        } else {
+                            if (colNum == dim - 1) {
+                                if (side.toLowerCase().equals("left")) { values[1] = values[1].rotateCCW(); }
+                                else { values[3] = values[3].rotateCW(); }
+                            }
+                        }
+                        //------------------
+                        //replacing column - row - column - row
+                        Col replacingCol = values[0].getRow(colNum).rotateCCW();
+                        Col tempCol = values[4].getCol(colNum);
+                        values[4] = values[4].changeCol(colNum, replacingCol);
+                        replacingCol = tempCol;
+                        tempCol = values[5].getRow(dim - colNum).rotateCCW();
+                        values[5] = values[5].changeRow(dim - colNum, replacingCol.rotateCCW());
+                        replacingCol = tempCol;
+                        tempCol = values[2].getCol(dim - colNum);
+                        values[2] = values[2].changeCol(dim - colNum, replacingCol);
+                        replacingCol = tempCol;
+                        values[0] = values[0].changeRow(dim - colNum, replacingCol.rotateCCW());
+                    }
+                }
+            } else {
+                if (direction.toLowerCase().equals("cw")) { //front side should go up
+                    for (int colNum = startNum; colNum <= endNum; colNum++) {
+                        //rotating affected left/right sides
+                        if (colNum == 0) {
+                            if (side.toLowerCase().equals("bottom")) {values[2] = values[2].rotateCW(); }
+                            else {values[4] = values[4].rotateCCW(); }
+                        } else if (colNum == dim - 1) {
+                            if (side.toLowerCase().equals("bottom")) {values[4] = values[4].rotateCCW();}
+                            else {values[2] = values[2].rotateCW(); }
+                        }
+                        Col replacingCol = values[5].getCol(colNum);
+                        Col tempCol = values[1].getCol(colNum);
+                        values[1] = values[1].changeCol(colNum, replacingCol);
+                        replacingCol = tempCol;
+                        tempCol = values[0].getCol(colNum);
+                        values[0] = values[0].changeCol(colNum, replacingCol);
+                        replacingCol = tempCol;
+                        tempCol = values[3].getCol(dim - colNum); //back side - need to rotate column
+                        values[3] = values[3].changeCol(dim - colNum, replacingCol.rotateCW().rotateCW());
+                        replacingCol = tempCol;
+                        values[5] = values[5].changeCol(colNum, replacingCol.rotateCW().rotateCW());
+                    }
+                } else {
+                    for (int colNum = startNum; colNum <= endNum; colNum++) {
+                        //rotating affected left/right sides
+                        if (colNum == 0) {
+                            if (side.toLowerCase().equals("bottom")) {values[2] = values[2].rotateCCW(); }
+                            else {values[4] = values[4].rotateCW(); }
+                        } else if (colNum == dim - 1) {
+                            if (side.toLowerCase().equals("bottom")) {values[4] = values[4].rotateCW();}
+                            else {values[2] = values[2].rotateCCW(); }
+                        }
+                        //------------------
+                        //replacing column - row - column - row
+                        Col replacingCol = values[0].getCol(colNum);
+                        Col tempCol = values[1].getCol(colNum);
+                        values[1] = values[1].changeCol(colNum, replacingCol);
+                        replacingCol = tempCol;
+                        tempCol = values[5].getCol(colNum);
+                        values[5] = values[5].changeCol(colNum, replacingCol);
+                        replacingCol = tempCol;
+                        tempCol = values[3].getCol(dim - colNum);
+                        values[3] = values[3].changeCol(dim - colNum, replacingCol.rotateCW().rotateCW());
+                        replacingCol = tempCol; //these double rotations - reverse column because back is mirrored
+                        values[0] = values[0].changeCol(colNum, replacingCol.rotateCW().rotateCW());
+                    }
+                }
+            }
         }
     }
 }

@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class Tests {
     @Test
     public void rightRowRotating() {
-        Rubik.Cube.Side.Row tester = new Rubik.Cube.Side.Row(char["w", "y", "b"]);
-        Rubik.Cube.Side.Row needed = new Rubik.Cube.Side.Row(["w", "y", "b"])
+        Rubik.Row tester = new Rubik.Row("www");
+        Rubik.Side needed = new Rubik.Side("wwwwwwwww")
         assertEquals([""]);
     }
 }
