@@ -33,7 +33,7 @@ class Row
 -way to save data(triplets(-, no size variations), arrays(maybe)) - string - decided
 -constructor - solve size problems(4x4x4 cube, how to apply only 4 elements arrays) - decided by using string
 
-class Col (Column)
+class main.Col (Column)
 -rotateRight/rotateLeft methods(transforming to Row) - done
 -way to save data(triplets(-, no size variations), arrays(maybe)) - string - decided
 -constructor - solve size problems(4x4x4 cube, how to apply only 4 elements arrays) - decided by using string
