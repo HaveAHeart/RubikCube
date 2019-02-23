@@ -1,26 +1,78 @@
 package main;
 
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.Objects;
+
 public class Side {
     private int dim;
-    private Color[][] colors = new Color[dim][dim]; //row - position (colors[0][2] - 1st row, 3rd position)
+    private Color[][] colors = new Color[dim][dim]; //row - position (e.g. colors[0][2] - 1st row, 3rd position)
 
-    //generators
-    public Side(Col[] cols, int dimension) { //TODO: check amount and size of columns
-        dim = dimension;
-        for (int i = 0; i < dim; i++) {
-            for (int b = 0; b < dim; b++) {
-                colors[i][b] = cols[b].getValue(i);
-            }
-        }
+    //overriding equals and hashcode for tests
+
+    @Override
+    public String toString() {
+        return "Side{" +
+                "dim=" + dim +
+                ", colors=" + Arrays.toString(colors) +
+                '}';
     }
 
-    public Side(Row[] rows, int dimension) { //TODO: check amount and size of rows
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Side side = (Side) o;
+        return dim == side.dim &&
+                Arrays.equals(colors, side.colors);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(dim);
+        result = 31 * result + Arrays.hashCode(colors);
+        return result;
+    }
+
+    //generators
+    public Side(Col[] cols, int dimension) {
         dim = dimension;
+        if (cols.length != dim) { //column checks its own size in its constructor
+            throw new InputMismatchException("wrong amount of columns while trying to create a side");
+        }
+        Color[][] tempColor = new Color[dim][dim];
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++){
+                tempColor[i][j] = cols[j].getValue(i);
+
+            }
+        }
+        colors = tempColor;
+    }
+
+    public Side(Row[] rows, int dimension) {
+        dim = dimension;
+        if (rows.length != dim) { //row checks its own size in its constructor
+            throw new InputMismatchException("wrong amount of columns while trying to create a side");
+        }
         for (int i = 0; i < dim; i++) {
             for (int b = 0; b < dim; b++) {
                 colors[i][b] = rows[i].getValue(b);
             }
         }
+    }
+
+    public Side(Color[][] input, int dimension) {
+        dim = dimension;
+        if (input.length != dimension) { //checking amount of rows
+            throw new InputMismatchException("wrong amount of inner arrays while trying to create a side");
+        }
+        for (int i = 0; i < dim; i++) {
+            if (input[i].length != dimension) { //checking amount of columns
+                throw new InputMismatchException("wrong amount of inner arrays while trying to create a side");
+            }
+        }
+        colors = input;
     }
 
     //------------------
@@ -29,7 +81,7 @@ public class Side {
         return new Row(colors[rowNum], dim); //just taking Color[] array we need
     }
 
-    public Col getCol(int colNum) { //TODO: check colnum
+    public Col getCol(int colNum) { //TODO: check colNum
         Color[] tempColors = new Color[dim];
         for (int i = 0; i < dim; i++) {
             tempColors[i] = colors[i][colNum]; //taking color from needed positions
@@ -51,24 +103,22 @@ public class Side {
 
     //------------------
     //rotation methods
-    public void rotateCW() {
-        Col[] tempCols = new Col[dim];      //rotating rows to columns
-        for (int i = 0; i < dim; i++) { tempCols[dim - 1 - i] = this.getRow(i).rotateCW(); }
-        for (int i = 0; i < dim; i++) {     //changing values just not to create new
-            for (int b = 0; b < dim; b++) { //object and leave this method void-typed
-                colors[i][b] = tempCols[b].getValue(i);
-            }
+    public Side rotateCW() {
+        Col[] newCols = new Col[dim];
+        for (int i = 0; i < dim; i++) {
+            newCols[dim - 1 - i] = new Row(colors[i], dim).rotateCW();
         }
+        return new Side(newCols, dim);
+
     }
 
-    public void rotateCCW() {
-        Col[] tempCols = new Col[dim];      //rotating rows to columns
-        for (int i = 0; i < dim; i++) { tempCols[i] = this.getRow(i).rotateCCW(); }
-        for (int i = 0; i < dim; i++) {     //changing values just not to create new
-            for (int b = 0; b < dim; b++) { //object and leave this method void-typed
-                colors[i][b] = tempCols[b].getValue(i);
-            }
+    public Side rotateCCW() {
+        Col[] newCols = new Col[dim];
+        for (int i = 0; i < dim; i++) {
+            newCols[dim - 1 - i] = new Row(this.colors[i], dim).rotateCW();
+            System.out.println(newCols[dim - 1 - i]);
         }
+        return new Side(newCols, dim);
     }
 
     //------------------
