@@ -61,9 +61,7 @@ public class Tests {
                 { Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE },
         };
         Side rotatedSideCW = new Side(colorsRotatedCW, 4);
-        System.out.println(rotatedSideCW);
-        System.out.println(origSide.rotateCW());
-        assertEquals(rotatedSideCW, origSide.rotateCW()); //still failed(
+        assertEquals(rotatedSideCW.toString(), origSide.rotateCW().toString());
 
         Color[][] colorsRotatedCCW = {
                 { Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE },
@@ -72,8 +70,7 @@ public class Tests {
                 { Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN },
         };
         Side rotatedSideCCW = new Side(colorsRotatedCCW, 4);
-
-        assertEquals(rotatedSideCCW, origSide.rotateCCW());
+        assertEquals(rotatedSideCCW.toString(), origSide.rotateCCW().toString());
 
 
     }

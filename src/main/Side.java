@@ -12,10 +12,23 @@ public class Side {
 
     @Override
     public String toString() {
-        return "Side{" +
-                "dim=" + dim +
-                ", colors=" + Arrays.toString(colors) +
-                '}';
+        StringBuilder sb = new StringBuilder("\n");
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                switch (colors[i][j]) {
+                    case WHITE: { sb.append("w "); break; }
+                    case YELLOW: { sb.append("y "); break; }
+                    case ORANGE: { sb.append("o "); break; }
+                    case BLUE: { sb.append("b "); break; }
+                    case RED: { sb.append("r "); break; }
+                    case GREEN: { sb.append("g "); break; }
+                }
+
+            }
+            sb.append("\n");
+        }
+        sb.append("\n");
+        return sb.toString();
     }
 
     @Override
@@ -115,8 +128,7 @@ public class Side {
     public Side rotateCCW() {
         Col[] newCols = new Col[dim];
         for (int i = 0; i < dim; i++) {
-            newCols[dim - 1 - i] = new Row(this.colors[i], dim).rotateCW();
-            System.out.println(newCols[dim - 1 - i]);
+            newCols[i] = new Row(this.colors[i], dim).rotateCCW();
         }
         return new Side(newCols, dim);
     }
