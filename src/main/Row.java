@@ -26,6 +26,29 @@ public class Row {
         return result;
     }
 
+    //overriding toString() for debugging
+    private char enumToChar(Color color) {
+        char output = ' ';
+        switch (color) {
+            case WHITE: { output = 'W'; break; }
+            case YELLOW: { output = 'Y'; break; }
+            case ORANGE: { output = 'O'; break; }
+            case BLUE: { output = 'B'; break; }
+            case RED: { output = 'R'; break; }
+            case GREEN: { output = 'G'; break; }
+        }
+        return output;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Color col : colors) {
+            sb.append(enumToChar(col)).append(' ');
+        }
+        return sb.toString();
+    }
+
     //generator
     public Row(Color[] input, int dimension) {
         dim = dimension;

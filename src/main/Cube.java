@@ -1,13 +1,89 @@
 package main;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Map;
+import java.util.*;
 
 public class Cube {
-    private Map<String, Side> sides = new HashMap<>();
+    Map<String, Side> sides = new HashMap<>();
     private int dim;
+
+    //overriding equals and hashcode for tests
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cube cube = (Cube) o;
+        return dim == cube.dim &&
+                Objects.equals(sides, cube.sides);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sides, dim);
+    }
+
+    //overriding toString() for debugging in such format:
+    // top row: TOP; middle row: BACK LEFT FRONT RIGHT; bottom row: BOTTOM
+    private char enumToChar(Color color) {
+        char output = ' ';
+        switch (color) {
+            case WHITE: { output = 'W'; break; }
+            case YELLOW: { output = 'Y'; break; }
+            case ORANGE: { output = 'O'; break; }
+            case BLUE: { output = 'B'; break; }
+            case RED: { output = 'R'; break; }
+            case GREEN: { output = 'G'; break; }
+        }
+        return output;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("\n");
+
+        //printing top side
+        for(int i = 0; i < dim; i++) {
+            for (int j = 0; j < (dim * 2 + 1) * 2; j++) { sb.append(' '); }
+            for (int k = 0; k < dim; k++){
+                sb.append(enumToChar(sides.get("top").getRow(i).getValue(k))).append(' ');
+            }
+            sb.append('\n');
+        }
+
+        //printing middle row: back - left - front - right
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                sb.append(enumToChar(sides.get("back").getRow(i).getValue(j))).append(" ");
+            }
+            sb.append('|');
+            for (int j = 0; j < dim; j++) {
+                sb.append(enumToChar(sides.get("left").getRow(i).getValue(j))).append(" ");
+            }
+            sb.append('|');
+            for (int j = 0; j < dim; j++) {
+                sb.append(enumToChar(sides.get("front").getRow(i).getValue(j))).append(" ");
+            }
+            sb.append('|');
+            for (int j = 0; j < dim; j++) {
+                sb.append(enumToChar(sides.get("right").getRow(i).getValue(j))).append(" ");
+            }
+            sb.append('|');
+            sb.append('\n');
+        }
+
+        //printing bottom side
+        for(int i = 0; i < dim; i++) {
+            for (int j = 0; j < (dim * 2 + 1) * 2; j++) { sb.append(' '); }
+            for (int j = 0; j < dim; j++){
+                sb.append(enumToChar(sides.get("bottom").getRow(i).getValue(j))).append(' ');
+            }
+            sb.append('\n');
+        }
+
+        return sb.toString();
+    }
+
     //generators
     public Cube(Side[] input, int dimension) { //side order - top, front, right, back, left, bottom
         sides.put("top", input[0]);
@@ -17,6 +93,11 @@ public class Cube {
         sides.put("left", input[4]);
         sides.put("bottom", input[5]);
         dim = dimension;
+    }
+
+    //replacing methods
+    public void changeSide(Side replacing, String sideName) {
+        this.sides.put(sideName, replacing);
     }
 
     //------------------
@@ -46,7 +127,7 @@ public class Cube {
             sides.get("left").changeCol(rowNum, replacingRow.rotateCW());
         }
         else {
-            Row replacingRow = sides.get(commonOrderCW[3]).getRow(rowNum);
+            Row replacingRow = sides.get("right").getRow(rowNum);
             Row tempRow;
             for (String sideName : commonOrderCW) {
                 tempRow = sides.get(sideName).getRow(rowNum);
@@ -78,17 +159,18 @@ public class Cube {
             //rotating WHOLE affected sides
             //if we are rotating layer on top or bottom side
             if ((i == 0 && side.equals("top")) || (i == dim - 1 && side.equals("bottom"))) {
-                sides.get("back").rotateCCW(); //data format requires to invert most of actions with back side
+                this.changeSide(sides.get("back").rotateCCW(), "back");
+                //data format requires to invert most of actions with back side
             }
             else if ((i == 0 && side.equals("bottom")) || (i == dim - 1 && side.equals("top"))) {
-                sides.get("front").rotateCW();
+                this.changeSide(sides.get("front").rotateCW(), "front");
             }
             //all the other sides
             else if (i == 0) {
-                sides.get("top").rotateCW();
+                this.changeSide(sides.get("top").rotateCW(), "top");
             }
             else if (i == dim - 1) {
-                sides.get("bottom").rotateCW();
+                this.changeSide(sides.get("bottom").rotateCW(), "bottom");
             }
             //----------
         }
