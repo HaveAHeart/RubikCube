@@ -1,10 +1,32 @@
 package main;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.Objects;
 
-public class Col {
+public final class Col implements Serializable {
     private int dim;
     private Color[] colors;
+
+    //overriding equals and hashcode for tests
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Col col = (Col) o;
+        return dim == col.dim &&
+                Arrays.equals(colors, col.colors);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(dim);
+        result = 31 * result + Arrays.hashCode(colors);
+        return result;
+    }
 
     //generator
     public Col(Color[] input, int dimension) {
@@ -13,6 +35,12 @@ public class Col {
             throw new InputMismatchException("wrong Color[] array size while creating column");
         }
         colors = input;
+    }
+
+    //deep cloning methods for row replacing while rotating
+    public Col deepClone() {
+        Color[] newColors = this.colors;
+        return new Col(newColors, dim);
     }
 
     //------------------

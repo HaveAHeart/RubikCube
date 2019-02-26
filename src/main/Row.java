@@ -1,17 +1,82 @@
 package main;
 
+import java.io.*;
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.Objects;
 
-public class Row {
+public final class Row implements Serializable {
     private int dim;
     private Color[] colors;
+
+    //overriding equals and hashcode for tests
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Row row = (Row) o;
+        return dim == row.dim &&
+                Arrays.equals(colors, row.colors);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(dim);
+        result = 31 * result + Arrays.hashCode(colors);
+        return result;
+    }
+
+    //overriding toString() for debugging
+    private char enumToChar(Color color) {
+        char output = ' ';
+        switch (color) {
+            case WHITE: { output = 'W'; break; }
+            case YELLOW: { output = 'Y'; break; }
+            case ORANGE: { output = 'O'; break; }
+            case BLUE: { output = 'B'; break; }
+            case RED: { output = 'R'; break; }
+            case GREEN: { output = 'G'; break; }
+        }
+        return output;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Color col : colors) {
+            sb.append(enumToChar(col)).append(' ');
+        }
+        return sb.toString();
+    }
+
+    //deep cloning methods for row replacing while rotating
+    public Row deepClone() {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos;
+        Row returnRow = null;
+        try {
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(this);
+            oos.flush();
+            oos.close();
+            bos.close();
+            byte[] byteData = bos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+            returnRow = (Row) new ObjectInputStream(bais).readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return returnRow;
+    }
 
     //generator
     public Row(Color[] input, int dimension) {
         dim = dimension;
         if (input.length != dim) {
-            throw new InputMismatchException("wrongColor[] array size while creating row");
+            throw new InputMismatchException("wrong Color[] array size while creating row");
         }
+
         colors = input;
     }
 
