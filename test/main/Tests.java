@@ -44,6 +44,16 @@ public class Tests {
         assertEquals(testRowCCW, testColCCW.rotateCCW());
     }
 
+    public Side generateSimpleSide (Color color, int dim) {
+        Color[][] sideColor = new Color[dim][dim];
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                sideColor[i][j] = color;
+            }
+        }
+        return new Side(sideColor, dim);
+    }
+
     @Test
     public void sideRotate() {
         Color[][] colorsOrig = {
@@ -52,7 +62,7 @@ public class Tests {
                 {Color.GREEN, Color.YELLOW, Color.BLUE, Color.WHITE},
                 {Color.GREEN, Color.YELLOW, Color.BLUE, Color.WHITE},
         };
-        Side origSide = new Side(colorsOrig, 4);
+        Side origSide = generateSimpleSide(Color.GREEN, 4);
 
         Color[][] colorsRotatedCW = {
                 {Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN},
@@ -77,53 +87,13 @@ public class Tests {
 
     @Test
     public void cubeRotate() {
-        Color[][] topSideColor = {
-            { Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE },
-            { Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE },
-            { Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE },
-            { Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE },
-        };
-        Side topSide = new Side(topSideColor, 4);
 
-        Color[][] frontSideColor = {
-                { Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN },
-                { Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN },
-                { Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN },
-                { Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN },
-        };
-        Side frontSide = new Side(frontSideColor, 4);
-
-        Color[][] rightSideColor = {
-                { Color.RED, Color.RED, Color.RED, Color.RED },
-                { Color.RED, Color.RED, Color.RED, Color.RED },
-                { Color.RED, Color.RED, Color.RED, Color.RED },
-                { Color.RED, Color.RED, Color.RED, Color.RED },
-        };
-        Side rightSide = new Side(rightSideColor, 4);
-
-        Color[][] backSideColor = {
-                { Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE },
-                { Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE },
-                { Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE },
-                { Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE },
-        };
-        Side backSide = new Side(backSideColor, 4);
-
-        Color[][] leftSideColor = {
-                { Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE },
-                { Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE },
-                { Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE },
-                { Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE },
-        };
-        Side leftSide = new Side(leftSideColor, 4);
-
-        Color[][] bottomSideColor = {
-                { Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW },
-                { Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW },
-                { Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW },
-                { Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW },
-        };
-        Side bottomSide = new Side(bottomSideColor, 4);
+        Side topSide = generateSimpleSide(Color.WHITE, 4);
+        Side frontSide = generateSimpleSide(Color.GREEN, 4);
+        Side rightSide = generateSimpleSide(Color.RED, 4);
+        Side backSide = generateSimpleSide(Color.ORANGE, 4);
+        Side leftSide = generateSimpleSide(Color.BLUE, 4);
+        Side bottomSide = generateSimpleSide(Color.YELLOW, 4);
 
         Side[] testSides = { topSide, frontSide, rightSide, backSide, leftSide, bottomSide };
         Cube testCube = new Cube(testSides, 4);

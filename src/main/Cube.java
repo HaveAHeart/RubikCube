@@ -103,34 +103,45 @@ public class Cube {
     //------------------
     //rotation methods
     public void rotateCWRowLayer(String side, int rowNum) {
-        String[] vertOrderCW = { "top", "right", "bottom", "left" };
-        String[] commonOrderCW = { "back", "left", "front", "right" };
+
+
 
         if (side.equals("top") || side.equals("bottom")) {
+
+            //String[] vertOrderCW = { "top", "right", "bottom", "left" };
+            //better to use 12 code strings to describe vertical row rotation in more details
+            //than doing the loop which will be hardly understandable and will require same
+            //amount of code strings
+
             int invertedNum = dim - 1 - rowNum;
-            Row replacingRow = sides.get("left").getCol(rowNum).rotateCW();
+            Row replacingRow = sides.get("left").getCol(rowNum).rotateCW().deepClone();
             Row tempRow;
 
-            tempRow = sides.get("top").getRow(rowNum);
+            tempRow = sides.get("top").getRow(rowNum).deepClone();
             sides.get("top").changeRow(rowNum, replacingRow);
             replacingRow = tempRow;
 
-            tempRow = sides.get("right").getCol(invertedNum).rotateCW();
+            tempRow = sides.get("right").getCol(invertedNum).rotateCW().deepClone();
             sides.get("right").changeCol(invertedNum, replacingRow.rotateCW());
             replacingRow = tempRow;
 
-            tempRow = sides.get("bottom").getRow(invertedNum);
+            tempRow = sides.get("bottom").getRow(invertedNum).deepClone();
             sides.get("bottom").changeRow(invertedNum, replacingRow);
             replacingRow = tempRow;
 
-            tempRow = sides.get("left").getCol(rowNum).rotateCW();
             sides.get("left").changeCol(rowNum, replacingRow.rotateCW());
+
         }
         else {
-            Row replacingRow = sides.get("right").getRow(rowNum);
+
+            //here we can easily use loop because no additional row modifications required
+
+            String[] commonOrderCW = { "back", "left", "front", "right" };
+            Row replacingRow = sides.get("right").getRow(rowNum).deepClone();
             Row tempRow;
+
             for (String sideName : commonOrderCW) {
-                tempRow = sides.get(sideName).getRow(rowNum);
+                tempRow = sides.get(sideName).getRow(rowNum).deepClone();
                 sides.get(sideName).changeRow(rowNum, replacingRow);
                 replacingRow = tempRow;
             }

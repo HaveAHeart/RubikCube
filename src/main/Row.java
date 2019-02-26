@@ -1,10 +1,11 @@
 package main;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Objects;
 
-public class Row {
+public final class Row implements Serializable {
     private int dim;
     private Color[] colors;
 
@@ -47,6 +48,26 @@ public class Row {
             sb.append(enumToChar(col)).append(' ');
         }
         return sb.toString();
+    }
+
+    //deep cloning methods for row replacing while rotating
+    public Row deepClone() {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos;
+        Row returnRow = null;
+        try {
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(this);
+            oos.flush();
+            oos.close();
+            bos.close();
+            byte[] byteData = bos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+            returnRow = (Row) new ObjectInputStream(bais).readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return returnRow;
     }
 
     //generator
