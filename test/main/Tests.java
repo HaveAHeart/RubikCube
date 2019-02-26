@@ -62,7 +62,7 @@ public class Tests {
                 {Color.GREEN, Color.YELLOW, Color.BLUE, Color.WHITE},
                 {Color.GREEN, Color.YELLOW, Color.BLUE, Color.WHITE},
         };
-        Side origSide = generateSimpleSide(Color.GREEN, 4);
+        Side origSide = new Side(colorsOrig, 4);
 
         Color[][] colorsRotatedCW = {
                 {Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN},
