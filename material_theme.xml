@@ -2,6 +2,9 @@
   <component name="MaterialThemeConfig">
     <option name="version" value="2.9.6.4" />
     <option name="selectedTheme" value="DARKER" />
+    <option name="highlightColor" value="80cbc4" />
+    <option name="isContrastMode" value="true" />
+    <option name="accentColor" value="80cbc4" />
     <option name="userId" value="13051d75:1692a650ac4:-8000" />
     <option name="allowDataCollection" value="true" />
     <option name="isHighContrast" value="true" />
