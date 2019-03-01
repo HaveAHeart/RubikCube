@@ -94,11 +94,13 @@ public class Tests {
         Side backSide = generateSimpleSide(Color.ORANGE, 4);
         Side leftSide = generateSimpleSide(Color.BLUE, 4);
         Side bottomSide = generateSimpleSide(Color.YELLOW, 4);
+        //Color[] testRow = { Color.WHITE, Color.BLUE, Color.YELLOW, Color.ORANGE };
+        //bottomSide.changeRow(1, new Row(testRow, 4));
 
         Side[] testSides = { topSide, frontSide, rightSide, backSide, leftSide, bottomSide };
         Cube testCube = new Cube(testSides, 4);
         System.out.println(testCube.toString());
-        testCube.rotateRowCW("front", 0, 0);
+        testCube.rotateRowCCW("front", 3, 3);
         System.out.println(testCube.toString());
     }
 }

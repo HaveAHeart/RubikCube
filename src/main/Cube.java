@@ -100,11 +100,31 @@ public class Cube {
         this.sides.put(sideName, replacing);
     }
 
-    //------------------
-    //rotation methods
+    //CW rotation methods
+    public void rotateCWRowSide (String side, int rowNum) {
+
+        //rotating WHOLE affected sides
+
+        //if we are rotating layer on top or bottom side
+        if ((rowNum == 0 && side.equals("top")) || (rowNum == dim - 1 && side.equals("bottom"))) {
+            this.changeSide(sides.get("back").rotateCCW(), "back");
+            //data format requires to invert most of actions with back side
+        }
+        else if ((rowNum == 0 && side.equals("bottom")) || (rowNum == dim - 1 && side.equals("top"))) {
+            this.changeSide(sides.get("front").rotateCW(), "front");
+        }
+
+        //all the other sides
+        else if (rowNum == 0) {
+            this.changeSide(sides.get("top").rotateCW(), "top");
+        }
+        else if (rowNum == dim - 1) {
+            this.changeSide(sides.get("bottom").rotateCW(), "bottom");
+        }
+        //----------
+    }
+
     public void rotateCWRowLayer(String side, int rowNum) {
-
-
 
         if (side.equals("top") || side.equals("bottom")) {
 
@@ -165,29 +185,110 @@ public class Cube {
         for (int i = startNum; i <= endNum; i++) {
             //rotating affected rows or columns - one of them on side
             rotateCWRowLayer(side, i);
-            //----------
 
-            //rotating WHOLE affected sides
-            //if we are rotating layer on top or bottom side
-            if ((i == 0 && side.equals("top")) || (i == dim - 1 && side.equals("bottom"))) {
-                this.changeSide(sides.get("back").rotateCCW(), "back");
-                //data format requires to invert most of actions with back side
-            }
-            else if ((i == 0 && side.equals("bottom")) || (i == dim - 1 && side.equals("top"))) {
-                this.changeSide(sides.get("front").rotateCW(), "front");
-            }
-            //all the other sides
-            else if (i == 0) {
-                this.changeSide(sides.get("top").rotateCW(), "top");
-            }
-            else if (i == dim - 1) {
-                this.changeSide(sides.get("bottom").rotateCW(), "bottom");
-            }
-            //----------
+            //rotating affected side
+            rotateCWRowSide(side, i);
         }
     }
 
-    public void rotateCol(String side, String direction, int startNum, int endNum) {
+    //CCW rotation methods
+    public void rotateCCWRowLayer (String side, int rowNum) {
+
+        if (side.equals("top") || side.equals("bottom")) {
+
+            //String[] vertOrderCCW = { "top", "left", "bottom", "right" };
+            //better to use 12 code strings to describe vertical row rotation in more details
+            //than doing the loop which will be hardly understandable and will require same
+            //amount of code strings
+
+            int invertedNum = dim - 1 - rowNum;
+            Row replacingRow = sides.get("right").getCol(invertedNum).rotateCCW().deepClone();
+            Row tempRow;
+
+            tempRow = sides.get("top").getRow(rowNum).deepClone();
+            sides.get("top").changeRow(rowNum, replacingRow);
+            replacingRow = tempRow;
+
+            tempRow = sides.get("left").getCol(rowNum).rotateCCW().deepClone();
+            sides.get("left").changeCol(rowNum, replacingRow.rotateCCW());
+            replacingRow = tempRow;
+
+            tempRow = sides.get("bottom").getRow(invertedNum).deepClone();
+            sides.get("bottom").changeRow(invertedNum, replacingRow);
+            replacingRow = tempRow;
+
+            sides.get("right").changeCol(invertedNum, replacingRow.rotateCCW());
+
+        }
+        else {
+
+            //here we can easily use loop because no additional row modifications required
+
+            String[] commonOrderCCW = { "front", "left", "back", "right" };
+            Row replacingRow = sides.get("right").getRow(rowNum).deepClone();
+            Row tempRow;
+
+            for (String sideName : commonOrderCCW) {
+                tempRow = sides.get(sideName).getRow(rowNum).deepClone();
+                sides.get(sideName).changeRow(rowNum, replacingRow);
+                replacingRow = tempRow;
+            }
+        }
+    }
+
+    public void rotateCCWRowSide (String side, int rowNum) {
+
+        //rotating WHOLE affected sides
+
+        //if we are rotating layer on top or bottom side
+        if ((rowNum == 0 && side.equals("top")) || (rowNum == dim - 1 && side.equals("bottom"))) {
+            this.changeSide(sides.get("back").rotateCW(), "back");
+            //data format requires to invert most of actions with back side
+        }
+        else if ((rowNum == 0 && side.equals("bottom")) || (rowNum == dim - 1 && side.equals("top"))) {
+            this.changeSide(sides.get("front").rotateCCW(), "front");
+        }
+
+        //all the other sides
+        else if (rowNum == 0) {
+            this.changeSide(sides.get("top").rotateCCW(), "top");
+        }
+        else if (rowNum == dim - 1) {
+            this.changeSide(sides.get("bottom").rotateCCW(), "bottom");
+        }
+        //----------
+    }
+
+    public void rotateRowCCW(String side, int startNum, int endNum) {
+        side = side.toLowerCase();
+
+        //checking input data
+        String[] sideNames = { "top", "front", "right", "back", "left", "bottom" };
+        if (!Arrays.asList(sideNames).contains(side)) {
+            throw new InputMismatchException("incorrect side name");
+        }
+
+        if (startNum > endNum || startNum < 0 || startNum > dim - 1 || endNum > dim - 1) {
+            throw new InputMismatchException("incorrect startNum/endNum");
+        }
+        //----------
+        for (int i = startNum; i <= endNum; i++) {
+
+            //rotating affected rows or columns - on of them on side
+            rotateCCWRowLayer(side, i);
+
+            //rotating affected side
+            rotateCCWRowSide(side, i);
+        }
+    }
+
+    //Up rotation methods
+    public void rotateColUp(String side, int startNum, int endNum) {
+
+    }
+
+    //Down rotation methods
+    public void rotateColDown(String side, int startNum, int endNum) {
 
     }
 }
