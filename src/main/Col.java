@@ -10,8 +10,6 @@ public final class Col implements Serializable {
     private Color[] colors;
 
     //overriding equals and hashcode for tests
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -28,6 +26,12 @@ public final class Col implements Serializable {
         return result;
     }
 
+    //deep cloning methods for row replacing while rotating
+    public Col deepClone() {
+        Color[] newColors = this.colors;
+        return new Col(newColors, dim);
+    }
+
     //generator
     public Col(Color[] input, int dimension) {
         dim = dimension;
@@ -37,14 +41,11 @@ public final class Col implements Serializable {
         colors = input;
     }
 
-    //deep cloning methods for row replacing while rotating
-    public Col deepClone() {
-        Color[] newColors = this.colors;
-        return new Col(newColors, dim);
+    //rotation methods
+    public Col invert() {
+        return new Col(colors, dim).rotateCW().rotateCW().deepClone();
     }
 
-    //------------------
-    //rotation methods
     public Row rotateCW() {
         for (int i = 0; i < colors.length/2; i++){
             Color temp = colors[i];
@@ -56,7 +57,6 @@ public final class Col implements Serializable {
 
     public Row rotateCCW() { return new Row(colors, dim); }
 
-    //------------------
     //access methods
     public Color getValue(int num) {
         if (num >= colors.length) {

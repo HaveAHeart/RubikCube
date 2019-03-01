@@ -10,7 +10,6 @@ public final class Row implements Serializable {
     private Color[] colors;
 
     //overriding equals and hashcode for tests
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -25,29 +24,6 @@ public final class Row implements Serializable {
         int result = Objects.hash(dim);
         result = 31 * result + Arrays.hashCode(colors);
         return result;
-    }
-
-    //overriding toString() for debugging
-    private char enumToChar(Color color) {
-        char output = ' ';
-        switch (color) {
-            case WHITE: { output = 'W'; break; }
-            case YELLOW: { output = 'Y'; break; }
-            case ORANGE: { output = 'O'; break; }
-            case BLUE: { output = 'B'; break; }
-            case RED: { output = 'R'; break; }
-            case GREEN: { output = 'G'; break; }
-        }
-        return output;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (Color col : colors) {
-            sb.append(enumToChar(col)).append(' ');
-        }
-        return sb.toString();
     }
 
     //deep cloning methods for row replacing while rotating
@@ -70,7 +46,7 @@ public final class Row implements Serializable {
         return returnRow;
     }
 
-    //generator
+    //generators
     public Row(Color[] input, int dimension) {
         dim = dimension;
         if (input.length != dim) {
@@ -80,7 +56,6 @@ public final class Row implements Serializable {
         colors = input;
     }
 
-    //------------------
     //rotation methods
     public Col rotateCW() { return new Col(colors, dim); }
 
@@ -93,7 +68,6 @@ public final class Row implements Serializable {
         return new Col(colors, dim);
     }
 
-    //------------------
     //access methods
     public Color getValue(int num) {
         if (num >= colors.length) {
