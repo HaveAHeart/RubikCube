@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Objects;
 
-public class Side {
+public final class Side {
     private int dim;
     private Color[][] colors = new Color[dim][dim]; //row - position (e.g. colors[0][2] - 1st row, 3rd position)
 
-    //overriding equals and hashcode for tests
+    //overriding toString(), equals and hashcode for tests
 
     @Override
     public String toString() {
@@ -60,7 +60,7 @@ public class Side {
 
             }
         }
-        colors = tempColor;
+        this.colors = tempColor;
     }
 
     public Side(Row[] rows, int dimension) {
@@ -89,12 +89,22 @@ public class Side {
     }
 
     //------------------
-    //side parts access methods
-    public Row getRow(int rowNum) { //TODO: check rowNum
+    //side parts getters
+    public Row getRow(int rowNum) {
+        //input data check
+        if (rowNum < 0 || rowNum > dim - 1) {
+            throw new InputMismatchException("incorrect rowNum while trying to receive a row from side");
+        }
+
         return new Row(colors[rowNum], dim); //just taking Color[] array we need
     }
 
-    public Col getCol(int colNum) { //TODO: check colNum
+    public Col getCol(int colNum) {
+        //input data check
+        if (colNum < 0 || colNum > dim - 1) {
+            throw new InputMismatchException("incorrect colNum while trying to receive a col from side");
+        }
+
         Color[] tempColors = new Color[dim];
         for (int i = 0; i < dim; i++) {
             tempColors[i] = colors[i][colNum]; //taking color from needed positions
@@ -102,19 +112,19 @@ public class Side {
         return new Col(tempColors, dim);
     }
 
-    public void changeRow(int rowNum, Row replace) {
+    //side parts setter
+    public void setRow(int rowNum, Row replace) {
         for (int i = 0; i < dim; i++) {
             colors[rowNum][i] = replace.getValue(i);
         }
     }
 
-    public void changeCol(int colNum, Col replace) {
+    public void setCol(int colNum, Col replace) {
         for (int i = 0; i < dim; i++) {
             colors[i][colNum] = replace.getValue(i);
         }
     }
 
-    //------------------
     //rotation methods
     public Side rotateCW() {
         Col[] newCols = new Col[dim];
@@ -128,14 +138,8 @@ public class Side {
     public Side rotateCCW() {
         Col[] newCols = new Col[dim];
         for (int i = 0; i < dim; i++) {
-            newCols[i] = new Row(this.colors[i], dim).rotateCCW();
+            newCols[i] = new Row(colors[i], dim).rotateCCW();
         }
         return new Side(newCols, dim);
-    }
-
-    //------------------
-    //side state access methods
-    public Color[][] sideState() {
-        return colors;
     }
 }
