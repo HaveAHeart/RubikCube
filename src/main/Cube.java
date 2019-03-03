@@ -94,6 +94,17 @@ public final class Cube {
         dim = dimension;
     }
 
+    public Cube(int dimension) {
+        dim = dimension;
+        //standard color scheme for Rubik's cube
+        sides.put("top", new Side(Color.GREEN, dim));
+        sides.put("front", new Side(Color.WHITE, dim));
+        sides.put("right", new Side(Color.ORANGE, dim));
+        sides.put("back", new Side(Color.YELLOW, dim));
+        sides.put("left", new Side(Color.RED, dim));
+        sides.put("bottom", new Side(Color.BLUE, dim));
+    }
+
     //side setter
     public void setSide(Side replacing, String sideName) {
         sides.put(sideName, replacing);

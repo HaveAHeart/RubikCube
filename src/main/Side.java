@@ -88,6 +88,17 @@ public final class Side {
         colors = input;
     }
 
+    public Side(Color color, int dimension) {
+        dim = dimension;
+        Color[][] tempColors = new Color[dim][dim];
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                tempColors[i][j] = color;
+            }
+        }
+        colors = tempColors;
+    }
+
     //------------------
     //side parts getters
     public Row getRow(int rowNum) {
