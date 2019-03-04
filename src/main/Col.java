@@ -59,7 +59,7 @@ public final class Col implements Serializable {
 
     //access methods
     public Color getValue(int num) {
-        if (num >= colors.length) {
+        if (num >= colors.length) {//IndexArrayOutOfBoundsException
             throw new InputMismatchException("index of element is too big while " +
                     "trying to get a value from column");
         }

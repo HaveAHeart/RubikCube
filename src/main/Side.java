@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Objects;
 
 public final class Side {
-    private int dim;
+    private int dim; //static cube
     private Color[][] colors = new Color[dim][dim]; //row - position (e.g. colors[0][2] - 1st row, 3rd position)
 
     //overriding toString(), equals and hashcode for tests
@@ -124,7 +124,7 @@ public final class Side {
     }
 
     //side parts setter
-    public void setRow(int rowNum, Row replace) {
+    public void setRow(int rowNum, Row replace) {   //checks, npe @NotNull
         for (int i = 0; i < dim; i++) {
             colors[rowNum][i] = replace.getValue(i);
         }

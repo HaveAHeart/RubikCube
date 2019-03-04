@@ -5,7 +5,7 @@ import java.util.*;
 public final class Cube {
     private Map<String, Side> sides = new HashMap<>();
     private int dim;
-    String[] sideNames = { "top", "front", "right", "back", "left", "bottom" };
+    String[] sideNames = { "top", "front", "right", "back", "left", "bottom" }; //modifiers
 
     //overriding equals and hashcode for tests
     @Override
@@ -24,6 +24,7 @@ public final class Cube {
 
     //overriding toString() for debugging, cube will be printed in such format:
     // top row of sides: TOP; middle row of sides: BACK LEFT FRONT RIGHT; bottom row of sides: BOTTOM
+    //static
     private char enumToChar(Color color) {
         char output = ' ';
         switch (color) {
@@ -51,6 +52,7 @@ public final class Cube {
         }
 
         //printing middle row: back - left - front - right
+        // helper
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 sb.append(enumToChar(sides.get("back").getRow(i).getValue(j))).append(" ");

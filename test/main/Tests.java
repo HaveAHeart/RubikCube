@@ -87,9 +87,11 @@ public class Tests {
         Cube testCube = new Cube(3);
 
         System.out.println(testCube.toString());
+        testCube.rotateRowCW("top", 0, 0);
         //testCube.rotateRowCCW("top", 0, 0);
+        //testCube.rotateColUp("back", 0, 0);
         //testCube.rotateColDown("back", 0, 0);
-        testCube.randomizeState(100000);
+        //testCube.randomizeState(1000);
         System.out.println(testCube.toString());
     }
 }
