@@ -5,7 +5,7 @@ import java.util.*;
 public final class Cube {
     private Map<String, Side> sides = new HashMap<>();
     private int dim;
-    String[] sideNames = { "top", "front", "right", "back", "left", "bottom" }; //modifiers
+    static String[] sideNames = { "top", "front", "right", "back", "left", "bottom" };
 
     //overriding equals and hashcode for tests
     @Override
@@ -24,8 +24,8 @@ public final class Cube {
 
     //overriding toString() for debugging, cube will be printed in such format:
     // top row of sides: TOP; middle row of sides: BACK LEFT FRONT RIGHT; bottom row of sides: BOTTOM
-    //static
-    private char enumToChar(Color color) {
+
+    private static char enumToChar(Color color) {
         char output = ' ';
         switch (color) {
             case WHITE: { output = 'W'; break; }
@@ -87,6 +87,17 @@ public final class Cube {
 
     //generators
     public Cube(Side[] input, int dimension) { //side order - top, front, right, back, left, bottom
+
+        //input data check
+        if (input.length != 6)
+            throw new InputMismatchException("Incorrect amount of Sides given while trying to create a Cube");
+        else if (dimension <= 0)
+            throw new InputMismatchException("Incorrect dimension - less or equal to zero");
+        for (Side anInput : input) {
+            if (anInput.getDim() != dimension)
+                throw new InputMismatchException("Incorrect Side size while trying to create a Cube");
+        }
+
         sides.put("top", input[0]);
         sides.put("front", input[1]);
         sides.put("right", input[2]);
@@ -97,6 +108,11 @@ public final class Cube {
     }
 
     public Cube(int dimension) {
+
+        //input data check
+        if (dimension <= 0)
+            throw new InputMismatchException("Incorrect dimension - less or equal to zero");
+
         dim = dimension;
         //standard color scheme for Rubik's cube
         sides.put("top", new Side(Color.GREEN, dim));
@@ -108,7 +124,15 @@ public final class Cube {
     }
 
     //side setter
-    public void setSide(Side replacing, String sideName) {
+    private void setSide(Side replacing, String sideName) {
+        sideName = sideName.toLowerCase();
+
+        //checking input data
+        if (!Arrays.asList(sideNames).contains(sideName)) {
+            throw new InputMismatchException("incorrect side name");
+        }
+
+        //----------
         sides.put(sideName, replacing);
     }
 
@@ -362,6 +386,7 @@ public final class Cube {
             throw new InputMismatchException("incorrect startNum/endNum");
         }
         //----------
+
         for (int i = startNum; i <= endNum; i++) {
 
             //rotating affected rows or columns - on of them on side
@@ -454,6 +479,7 @@ public final class Cube {
             throw new InputMismatchException("incorrect startNum/endNum");
         }
         //----------
+
         for (int i = startNum; i <= endNum; i++) {
 
             //rotating affected rows or columns - on of them on side

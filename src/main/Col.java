@@ -1,6 +1,6 @@
 package main;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Objects;
@@ -28,8 +28,22 @@ public final class Col implements Serializable {
 
     //deep cloning methods for row replacing while rotating
     public Col deepClone() {
-        Color[] newColors = this.colors;
-        return new Col(newColors, dim);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos;
+        Col returnCol = null;
+        try {
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(this);
+            oos.flush();
+            oos.close();
+            bos.close();
+            byte[] byteData = bos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+            returnCol = (Col) new ObjectInputStream(bais).readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return returnCol;
     }
 
     //generator
@@ -65,4 +79,6 @@ public final class Col implements Serializable {
         }
         return colors[num];
     }
+
+    public int getDim() { return this.dim; }
 }

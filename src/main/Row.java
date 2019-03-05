@@ -27,11 +27,10 @@ public final class Row implements Serializable {
     }
 
     //deep cloning methods for row replacing while rotating
-    public Row deepClone()  {
+    public Row deepClone() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos;
         Row returnRow = null;
-
         try {
             oos = new ObjectOutputStream(bos);
             oos.writeObject(this);
@@ -41,8 +40,8 @@ public final class Row implements Serializable {
             byte[] byteData = bos.toByteArray();
             ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
             returnRow = (Row) new ObjectInputStream(bais).readObject();
-        }catch (Exception e){
-
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return returnRow;
     }
@@ -77,4 +76,6 @@ public final class Row implements Serializable {
         }
         return colors[num];
     }
+
+    public int getDim() { return this.dim; }
 }

@@ -2,6 +2,8 @@ package main;
 
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -84,7 +86,7 @@ public class Tests {
 
     @Test
     public void cubeRotate() {
-        Cube testCube = new Cube(3);
+        Cube testCube = new Cube(10);
 
         System.out.println(testCube.toString());
         testCube.rotateRowCW("top", 0, 0);
