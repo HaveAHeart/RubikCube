@@ -70,10 +70,11 @@ public final class Row implements Serializable {
 
     //access methods
     public Color getValue(int num) {
-        if (num >= colors.length) {
-            throw new InputMismatchException("index of element is too big while " +
-                    "trying to get a value from row");
+        if (num >= colors.length || num < 0) {
+            throw new InputMismatchException("incorrect number while trying to get a value");
         }
         return colors[num];
     }
+
+    public int getDim() { return this.dim; }
 }

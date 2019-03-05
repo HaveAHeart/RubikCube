@@ -2,12 +2,23 @@ package main;
 
 import org.junit.Test;
 
+import java.util.InputMismatchException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class Tests {
     @Test
     public void rowRotate() {
+        Color[] colorsException = { Color.WHITE, Color.WHITE, Color.WHITE };
+        assertThrows(InputMismatchException.class,
+                () -> new Row(colorsException, 2));
+        assertThrows(InputMismatchException.class,
+                () -> new Row(colorsException, -2));
+        assertThrows(InputMismatchException.class,
+                () -> new Row(colorsException, -2).getValue(-1));
+
         Color[] colorsCW = {Color.WHITE, Color.BLUE, Color.ORANGE};
         Row testRow = new Row(colorsCW, 3);
         Col testCol = new Col(colorsCW, 3);
@@ -31,6 +42,14 @@ public class Tests {
 
     @Test
     public void colRotate() {
+        Color[] colorsException = { Color.WHITE, Color.WHITE, Color.WHITE };
+        assertThrows(InputMismatchException.class,
+                () -> new Col(colorsException, 2));
+        assertThrows(InputMismatchException.class,
+                () -> new Col(colorsException, -2));
+        assertThrows(InputMismatchException.class,
+                () -> new Col(colorsException, -2).getValue(-1));
+
         Color[] colorsCW = {Color.WHITE, Color.BLUE, Color.YELLOW, Color.GREEN};
         Col testColCW = new Col(colorsCW, 4);
         Color[] colorsCWRow = {Color.GREEN, Color.YELLOW, Color.BLUE, Color.WHITE};
@@ -49,16 +68,6 @@ public class Tests {
         Color[] colorsInvertedCol = { Color.WHITE, Color.BLUE, Color.YELLOW, Color.GREEN };
         Col invertedCol = new Col(colorsInvertedCol, 4);
         assertEquals(testCol.invert(), invertedCol);
-    }
-
-    public Side generateSimpleSide (Color color, int dim) {
-        Color[][] sideColor = new Color[dim][dim];
-        for (int i = 0; i < dim; i++) {
-            for (int j = 0; j < dim; j++) {
-                sideColor[i][j] = color;
-            }
-        }
-        return new Side(sideColor, dim);
     }
 
     @Test
@@ -89,28 +98,44 @@ public class Tests {
         Side rotatedSideCCW = new Side(colorsRotatedCCW, 4);
         assertEquals(rotatedSideCCW.toString(), origSide.rotateCCW().toString());
 
-
+        Color[] testRowColor = { Color.WHITE, Color.BLUE };
+        Row[] sideGenTest = {
+                new Row( testRowColor, 2),
+                new Row( testRowColor, 2),
+        };
+        Color[][] sideGenColors = {
+                { Color.WHITE, Color.BLUE },
+                { Color.WHITE, Color.BLUE },
+        };
+        assertEquals(new Side(sideGenColors, 2).toString(), new Side(sideGenTest, 2).toString());
     }
 
     @Test
     public void cubeRotate() {
-
-        Side topSide = generateSimpleSide(Color.WHITE, 4);
-        Side frontSide = generateSimpleSide(Color.GREEN, 4);
-        Side rightSide = generateSimpleSide(Color.RED, 4);
-        Side backSide = generateSimpleSide(Color.ORANGE, 4);
-        Side leftSide = generateSimpleSide(Color.BLUE, 4);
-        Side bottomSide = generateSimpleSide(Color.YELLOW, 4);
-        //Color[] tempColor = { Color.BLUE, Color.WHITE, Color.GREEN, Color.YELLOW };
-        //leftSide.setRow(1, new Row(tempColor, 4));
-
+        Side topSide = new Side(Color.GREEN, 4);
+        Side frontSide = new Side(Color.WHITE, 4);
+        Side rightSide = new Side(Color.ORANGE, 4);
+        Side backSide = new Side(Color.YELLOW, 4);
+        Side leftSide = new Side(Color.RED, 4);
+        Side bottomSide = new Side(Color.BLUE, 4);
         Side[] testSides = { topSide, frontSide, rightSide, backSide, leftSide, bottomSide };
-        Cube testCube = new Cube(testSides, 4);
-
+        Cube testCube = new Cube(4);
+        assertEquals(new Cube(testSides, 4).toString(), testCube.toString());
         System.out.println(testCube.toString());
-        //testCube.rotateRowCCW("top", 3, 3);
-        //testCube.rotateColDown("back", 0, 0);
-        testCube.randomizeState(2000);
+
+        testCube.rotateRowCW("top", 0, 0);
+        testCube.rotateRowCCW("bottom", 0, 0);
+        testCube.rotateRowCW("left", 0, 0);
+        testCube.rotateRowCCW("right", 0, 0);
+
+        testCube.rotateColUp("back", 0, 0);
+        testCube.rotateColUp("front", 3, 3);
+        testCube.rotateColUp("left", 2, 2);
+        testCube.rotateColUp("right", 1, 1);
+        testCube.rotateColUp("top", 0, 2);
+        testCube.rotateColDown("bottom", 0, 2);
+        System.out.println(testCube.toString());
+        testCube.randomizeState(1000);
         System.out.println(testCube.toString());
     }
 }

@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Objects;
 
 public final class Side {
-    private int dim;
+    private int dim; //static cube
     private Color[][] colors = new Color[dim][dim]; //row - position (e.g. colors[0][2] - 1st row, 3rd position)
 
     //overriding toString(), equals and hashcode for tests
@@ -49,10 +49,18 @@ public final class Side {
 
     //generators
     public Side(Col[] cols, int dimension) {
+
+        //input data check
+        if (dimension <= 0)
+            throw new InputMismatchException("Incorrect dimension - less or equal to zero");
         dim = dimension;
-        if (cols.length != dim) { //column checks its own size in its constructor
+        if (cols.length != dim)
             throw new InputMismatchException("wrong amount of columns while trying to create a side");
+        for (Col col : cols) {
+            if (col.getDim() != dimension)
+                throw new InputMismatchException("incorrect column size while trying to create a side");
         }
+
         Color[][] tempColor = new Color[dim][dim];
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++){
@@ -64,32 +72,65 @@ public final class Side {
     }
 
     public Side(Row[] rows, int dimension) {
+
+        //input data check
+        if (dimension <= 0)
+            throw new InputMismatchException("Incorrect dimension - less or equal to zero");
         dim = dimension;
-        if (rows.length != dim) { //row checks its own size in its constructor
-            throw new InputMismatchException("wrong amount of columns while trying to create a side");
+        if (rows.length != dim)
+            throw new InputMismatchException("wrong amount of rows while trying to create a side");
+        for (Row row : rows) {
+            if (row.getDim() != dimension)
+                throw new InputMismatchException("incorrect row size while trying to create a side");
         }
+
+        Color[][] tempColors = new Color[dim][dim];
         for (int i = 0; i < dim; i++) {
             for (int b = 0; b < dim; b++) {
-                colors[i][b] = rows[i].getValue(b);
+                tempColors[i][b] = rows[i].getValue(b);
             }
         }
+        colors = tempColors;
     }
 
     public Side(Color[][] input, int dimension) {
+
+        //input data check
+        if (dimension <= 0)
+            throw new InputMismatchException("Incorrect dimension - less or equal to zero");
         dim = dimension;
         if (input.length != dimension) { //checking amount of rows
             throw new InputMismatchException("wrong amount of inner arrays while trying to create a side");
         }
         for (int i = 0; i < dim; i++) {
             if (input[i].length != dimension) { //checking amount of columns
-                throw new InputMismatchException("wrong amount of inner arrays while trying to create a side");
+                throw new InputMismatchException("wrong amount of values while trying to create a side");
             }
         }
+
         colors = input;
+    }
+
+    public Side(Color color, int dimension) {
+
+        //input data check
+        if (dimension <= 0)
+            throw new InputMismatchException("Incorrect dimension - less or equal to zero");
+        dim = dimension;
+
+        Color[][] tempColors = new Color[dim][dim];
+        for (int i = 0; i < dim; i++) {
+            for (int j = 0; j < dim; j++) {
+                tempColors[i][j] = color;
+            }
+        }
+        colors = tempColors;
     }
 
     //------------------
     //side parts getters
+    public int getDim() { return this.dim; }
+
     public Row getRow(int rowNum) {
         //input data check
         if (rowNum < 0 || rowNum > dim - 1) {
@@ -112,14 +153,28 @@ public final class Side {
         return new Col(tempColors, dim);
     }
 
-    //side parts setter
+    //side parts setters
     public void setRow(int rowNum, Row replace) {
+
+        //input data check
+        if (rowNum < 0 || rowNum > dim - 1)
+            throw new InputMismatchException("incorrect row number");
+        else if (replace.getDim() != dim)
+            throw new InputMismatchException("incorrect row size");
+
         for (int i = 0; i < dim; i++) {
             colors[rowNum][i] = replace.getValue(i);
         }
     }
 
     public void setCol(int colNum, Col replace) {
+
+        //input data check
+        if (colNum < 0 || colNum > dim - 1)
+            throw new InputMismatchException("incorrect column number");
+        else if (replace.getDim() != dim)
+            throw new InputMismatchException("incorrect column size");
+
         for (int i = 0; i < dim; i++) {
             colors[i][colNum] = replace.getValue(i);
         }
