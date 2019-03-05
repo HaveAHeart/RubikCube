@@ -84,11 +84,13 @@ public final class Side {
                 throw new InputMismatchException("incorrect row size while trying to create a side");
         }
 
+        Color[][] tempColors = new Color[dim][dim];
         for (int i = 0; i < dim; i++) {
             for (int b = 0; b < dim; b++) {
-                colors[i][b] = rows[i].getValue(b);
+                tempColors[i][b] = rows[i].getValue(b);
             }
         }
+        colors = tempColors;
     }
 
     public Side(Color[][] input, int dimension) {
